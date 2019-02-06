@@ -20,7 +20,7 @@ ap.add_argument("-o", "--output", type=str,
 	help="path to output video")
 ap.add_argument("-y", "--display", type=int, default=1,
 	help="whether or not to display output frame to screen")
-ap.add_argument("-d", "--detection-method", type=str, default="cnn",
+ap.add_argument("-d", "--detection-method", type=str, default="hog",
 	help="face detection model to use: either `hog` or `cnn`")
 args = vars(ap.parse_args())
 
@@ -31,7 +31,7 @@ data = pickle.loads(open(args["encodings"], "rb").read())
 # initialize the video stream and pointer to output video file, then
 # allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start()
 writer = None
 time.sleep(2.0)
 
@@ -61,7 +61,7 @@ while True:
 		# attempt to match each face in the input image to our known
 		# encodings
 		matches = face_recognition.compare_faces(data["encodings"],
-			encoding)
+			encoding, 0.5)
 		name = "Unknown"
 
 		# check to see if we have found a match

@@ -66,7 +66,7 @@ while True:
         # attempt to match each face in the input image to our known
         # encodings
         matches = face_recognition.compare_faces(data["encodings"],
-                                                    encoding)
+                                                    encoding, 0.45)
         name = "Unknown"
 
         # check to see if we have found a match
@@ -98,6 +98,14 @@ while True:
         right = int(right * r)
         bottom = int(bottom * r)
         left = int(left * r)
+        
+        if name != "Unknown":
+            name = int(name)
+            cursor = cursor.execute("SELECT name,id from FACE_DATA")
+
+            for row in cursor:
+                if(row[1] == name) :
+                    name = row[0]
 
         # draw the predicted face name on the image
         cv2.rectangle(frame, (left, top), (right, bottom),
@@ -127,7 +135,7 @@ while True:
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break
-
+cursor.close()
 # check to see if the video writer point needs to be released
 if writer is not None:
     writer.release()
